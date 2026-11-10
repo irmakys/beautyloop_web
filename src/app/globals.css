@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Palette (RGB triplets for Tailwind alpha support) */
+  --c-ink: 10 7 6;          /* #0A0706 koyu tuval */
+  --c-cream: 251 243 238;   /* #FBF3EE */
+  --c-blush: 243 225 217;   /* #F3E1D9 */
+  --c-rose: 201 132 112;    /* bakır #C98470 */
+  --c-copper: 168 102 88;   /* #A86658 */
+  --c-sand: 230 213 204;    /* #E6D5CC */
+  --c-mauve: 217 179 165;   /* #D9B3A5 */
+  --c-champagne: 232 195 168;/* #E8C3A8 */
+
+  /* Motion tokens (tafpa: cubic-bezier(.22,1,.36,1)) */
+  --ease-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+html { background: rgb(var(--c-ink)); }
+body {
+  background: rgb(var(--c-ink));
+  color: rgb(var(--c-cream));
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+::selection { background: rgb(var(--c-rose)); color: rgb(var(--c-ink)); }
+
+@layer components {
+  .line-mask { display: block; overflow: hidden; padding-bottom: 0.12em; margin-bottom: -0.12em; padding-right: 0.06em; }
+  .line-inner { display: inline-block; will-change: transform; }
+
+  /* Mono küçük başlık */
+  .label { @apply font-mono text-[11px] uppercase tracking-[0.2em] text-cream/50; }
+  /* Yanlarda hairline'lı eyebrow */
+  .eyebrow { @apply label inline-flex items-center gap-3; }
+  .eyebrow::before, .eyebrow::after { content: ""; @apply hidden h-px w-8 bg-cream/25 sm:block; }
+  .eyebrow.no-after::after { display: none; }
+
+  /* Cam yüzey */
+  .glass { @apply border border-white/10 bg-white/[0.04] backdrop-blur-xl; }
+
+  /* Rose-gold gradient metin (serif italik vurgu için) */
+  .text-rosegold {
+    background-image: linear-gradient(100deg, #F6DCCF 0%, #E8B5A0 45%, #C98470 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* Shimmer'lı CTA */
+  .btn-shimmer { position: relative; overflow: hidden; isolation: isolate; }
+  .btn-shimmer::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; transform: translateX(-120%);
+    background: linear-gradient(110deg, transparent 30%, rgba(201,132,112,.55) 50%, transparent 70%);
+    animation: shimmer 3.2s var(--ease-expo) infinite;
+  }
+}
+
+@keyframes scan { 0%, 100% { top: 20%; } 50% { top: 80%; } }
+@keyframes shimmer { 0%, 35% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+@keyframes hint { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
